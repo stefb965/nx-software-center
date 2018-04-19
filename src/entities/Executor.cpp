@@ -8,6 +8,7 @@
 #include <QCoreApplication>
 
 #include "Executor.h"
+#include "Task.h"
 #include "interactors/Interactor.h"
 
 
@@ -83,6 +84,14 @@ QVariantMap Executor::getTaskData(const QString &id) {
 Executor::~Executor() {
     workerThread.quit();
     workerThread.wait();
+}
+void Executor::executeAsync(Task* task)
+{
+    task->setParent(nullptr);
+    task->moveToThread(&workerThread);
+
+    workerThread.start();
+    QMetaObject::invokeMethod(task, "tryStart", Qt::QueuedConnection);
 }
 
 

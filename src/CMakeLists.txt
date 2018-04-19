@@ -1,3 +1,5 @@
+cmake_policy(SET CMP0071 NEW)
+
 find_package(Qt5 REQUIRED COMPONENTS Core Gui Qml Network XmlPatterns)
 
 ###
@@ -46,7 +48,11 @@ set(CORE_SRC
     interactors/RunInteractor.cpp
     interactors/RunInteractor.h
     gateways/OCSStoreDataParser.cpp
-    gateways/OCSStoreDataParser.h gateways/OCSStoreSource.cpp gateways/OCSStoreSource.h)
+    gateways/OCSStoreDataParser.h
+    gateways/OCSStoreSource.cpp
+    gateways/OCSStoreSource.h
+    entities/Task.cpp
+    entities/Task.h)
 
 add_library(core OBJECT ${CORE_SRC})
 

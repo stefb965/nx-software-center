@@ -24,7 +24,9 @@ add_executable(test_core
     src/TestUpdater.cpp
     src/TestCache.cpp
     src/TestApplicationSerializer.cpp
-    src/TestUpgrader.cpp src/TestOSCStoreParser.cpp)
+    src/TestUpgrader.cpp
+    src/TestOSCStoreParser.cpp
+    src/TestTask.cpp)
 
 target_include_directories(test_core
     PRIVATE ${CMAKE_SOURCE_DIR}/src/

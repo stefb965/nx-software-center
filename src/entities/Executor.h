@@ -14,6 +14,7 @@
 #include <QThread>
 
 class Interactor;
+class Task;
 
 class Executor : public QObject {
 Q_OBJECT
@@ -28,6 +29,8 @@ public:
     virtual ~Executor();
 
     void execute(Interactor *interactor);
+
+    void executeAsync(Task* task);
 
     QVariantMap getTaskData(const QString &id);
 
