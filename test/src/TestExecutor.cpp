@@ -12,6 +12,7 @@
 #include "interactors/Interactor.h"
 #include "entities/Executor.h"
 #include "entities/Task.h"
+#include "SimpleTask.h"
 
 namespace NX_SOFTWARE_CENTER_TESTS {
 class DoNothingInteractor : public Interactor {
@@ -89,58 +90,6 @@ TEST_F(TestExecutor, run)
     i->deleteLater();
 }
 
-class SimpleTask : public Task {
-Q_OBJECT
-public:
-    bool resultReady;
-    bool resultError;
-
-    QTimer* t = nullptr;
-    SimpleTask()
-            :resultReady(false), resultError(false) { }
-
-    void setFailResult()
-    {
-        resultError = true;
-    }
-
-    void setCompleteResult()
-    {
-        resultReady = true;
-    }
-
-protected slots:
-    void taskImpl() override
-    {
-        t = new QTimer();
-        t->setInterval(1);
-        connect(t, &QTimer::timeout, [=]() {
-          try {
-              if (isStopRequested())
-                  setState(STOPPED);
-
-              if (resultReady)
-                  setState(COMPLETED);
-
-              if (resultError)
-                  setState(FAILED);
-
-              if (getState()!=Task::RUNNING) {
-                  t->stop();
-                  t->deleteLater();
-              }
-          }
-          catch (std::exception ex) {
-              std::cerr << ex.what() << std::endl;
-          }
-
-        });
-
-        t->start();
-    }
-
-};
-
 TEST_F(TestExecutor, runAsyncTask)
 {
     Executor executor;
@@ -148,10 +97,10 @@ TEST_F(TestExecutor, runAsyncTask)
     QSignalSpy spy(&task, &Task::stateChanged);
 
     executor.executeAsync(&task);
-    spy.wait();
+    spy.wait(2);
     ASSERT_EQ(Task::RUNNING, task.getState());
     task.setCompleteResult();
-    spy.wait();
+    spy.wait(2);
     ASSERT_EQ(Task::COMPLETED, task.getState());
     ASSERT_NE(QThread::currentThread(), task.thread());
 }

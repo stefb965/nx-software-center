@@ -2,7 +2,7 @@
 #include "../interactors/TaskMetadata.h"
 
 Task::Task()
-        :stopRequested(false), state(READY)
+        :stopRequested(false), progressValue(-1), progressTotal(-1), state(READY)
 {
 }
 
@@ -36,4 +36,24 @@ bool Task::isStopRequested()
 }
 Task::~Task()
 {
+}
+int Task::getProgressValue() const
+{
+    return progressValue;
+}
+int Task::getProgressTotal() const
+{
+    return progressTotal;
+}
+
+void Task::setProgressValue(int progressValue)
+{
+    Task::progressValue = progressValue;
+    emit progressValueChanged(progressValue);
+}
+
+void Task::setProgressTotal(int progressTotal)
+{
+    Task::progressTotal = progressTotal;
+    emit progressTotalChanged(progressValue);
 }

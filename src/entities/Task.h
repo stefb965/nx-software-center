@@ -9,6 +9,8 @@
 class Task : public QObject {
 Q_OBJECT
     bool stopRequested;
+    int progressValue;
+    int progressTotal;
 
 public:
     enum State {
@@ -24,6 +26,9 @@ public:
     virtual ~Task();
     State getState();
 
+    int getProgressValue() const;
+    int getProgressTotal() const;
+
 public slots:
     void tryStart();
     void tryStop();
@@ -34,12 +39,19 @@ protected:
     void setState(State newState);
     bool isStopRequested();
 
+    void setProgressValue(int progressValue);
+    void setProgressTotal(int progressTotal);
+
 signals:
     void stateChanged(Task::State state);
+    void progressValueChanged(int value);
+    void progressTotalChanged(int value);
 
 private:
     State state;
     Q_PROPERTY(State state MEMBER state NOTIFY stateChanged)
+    Q_PROPERTY(int progressValue MEMBER progressValue NOTIFY progressValueChanged)
+    Q_PROPERTY(int progressTotal MEMBER progressTotal NOTIFY progressTotalChanged)
 };
 
 Q_DECLARE_METATYPE(Task::State);
